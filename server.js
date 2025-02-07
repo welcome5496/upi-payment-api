@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-const UPI_ID = "merchant@upi";
+const UPI_ID = "himanshukok16@oksbi";
 const MERCHANT_NAME = "MerchantName";
 const CURRENCY = "INR";
 
