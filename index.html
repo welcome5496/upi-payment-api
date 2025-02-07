@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment Gateway</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; }
+        .container { max-width: 400px; margin-top: 50px; }
+        .card { padding: 20px; border-radius: 12px; background-color: white; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center; }
+        #qrcode { margin-top: 15px; }
+        .btn-primary { background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 10px; }
+        .btn-success { background-color: #28a745; color: white; border: none; border-radius: 8px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card shadow">
+            <h3 class="text-center">UPI Payment</h3>
+            <label class="form-label mt-2">Enter Amount</label>
+            <input type="number" id="amount" class="form-control" placeholder="Enter Amount" min="1" required>
+            <button class="btn btn-primary w-100 mt-3" onclick="generatePayment()">Generate QR</button>
+
+            <div id="qrcode"></div>
+            
+            <button id="payNow" class="btn btn-success w-100 mt-3" style="display: none;">Pay Now</button>
+        </div>
+    </div>
+
+    <script>
+        let upiID = "merchant@upi";
+        let merchantName = "Merchant Name";
+        let currency = "INR";
+
+        function generatePayment() {
+            let amount = document.getElementById("amount").value;
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount");
+                return;
+            }
+
+            let transactionID = "TXN" + Math.floor(Math.random() * 1000000);
+            let upiPaymentLink = `upi://pay?pa=${upiID}&pn=${merchantName}&am=${amount}&cu=${currency}&tid=${transactionID}`;
+
+            // Clear previous QR code
+            document.getElementById("qrcode").innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), {
+                text: upiPaymentLink,
+                width: 180,
+                height: 180
+            });
+
+            // Show Pay Now button
+            let payNowBtn = document.getElementById("payNow");
+            payNowBtn.style.display = "block";
+            payNowBtn.onclick = function () {
+                window.location.href = upiPaymentLink;
+            };
+        }
+    </script>
+
+</body>
+</html>
