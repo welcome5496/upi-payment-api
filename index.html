@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPI Payment Gateway</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; }
         .container { max-width: 400px; margin-top: 50px; }
         .card { padding: 20px; border-radius: 12px; background-color: white; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); text-align: center; }
         #qrcode { margin-top: 15px; }
-        #qrcode img { max-width: 100%; }
         .btn-primary { background-color: #007bff; color: white; border: none; border-radius: 8px; padding: 10px; }
         .btn-secondary { background-color: #6c757d; color: white; border: none; border-radius: 8px; padding: 10px; margin-top: 10px; }
     </style>
@@ -24,8 +22,10 @@
             <input type="number" id="amount" class="form-control" placeholder="Enter Amount" min="1" required>
             <button class="btn btn-primary w-100 mt-3" onclick="generatePayment()">Generate QR</button>
 
-            <div id="qrcode"></div>
-            
+            <div id="qrcode">
+                <img id="qrImage" style="display:none; width: 200px; height: 200px;">
+            </div>
+
             <button id="saveQR" class="btn btn-secondary w-100 mt-3" style="display: none;" onclick="saveQRCode()">Save QR to Gallery</button>
         </div>
     </div>
@@ -45,24 +45,18 @@
             let transactionID = "TXN" + Math.floor(Math.random() * 1000000);
             let upiPaymentLink = `upi://pay?pa=${upiID}&pn=${merchantName}&am=${amount}&cu=${currency}&tid=${transactionID}`;
 
-            // Clear previous QR code
-            document.getElementById("qrcode").innerHTML = "";
-            let qr = new QRCode(document.getElementById("qrcode"), {
-                text: upiPaymentLink,
-                width: 180,
-                height: 180,
-                correctLevel: QRCode.CorrectLevel.H // Makes QR high-quality
-            });
+            // Generate QR using Google API
+            let qrImage = document.getElementById("qrImage");
+            qrImage.src = `https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(upiPaymentLink)}&choe=UTF-8`;
+            qrImage.style.display = "block";
 
-            // Wait for QR code to generate, then show "Save QR" button
-            setTimeout(() => {
-                document.getElementById("saveQR").style.display = "block";
-            }, 500);
+            // Show Save QR button
+            document.getElementById("saveQR").style.display = "block";
         }
 
         function saveQRCode() {
-            let qrImg = document.querySelector("#qrcode img"); // Get the generated QR image
-            if (qrImg) {
+            let qrImg = document.getElementById("qrImage");
+            if (qrImg.src) {
                 let a = document.createElement("a");
                 a.href = qrImg.src;
                 a.download = "upi_qr.png";
@@ -72,6 +66,5 @@
             }
         }
     </script>
-
 </body>
 </html>
