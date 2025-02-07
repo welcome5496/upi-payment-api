@@ -57,6 +57,10 @@
         function saveQRCode() {
             let qrImg = document.getElementById("qrImage");
             if (qrImg.src) {
+                // Open QR image in a new tab
+                window.open(qrImg.src, '_blank');
+
+                // Create a download link
                 let a = document.createElement("a");
                 a.href = qrImg.src;
                 a.download = "upi_qr.png";
