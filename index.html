@@ -11,7 +11,7 @@
         body { background-color: #f4f4f4; color: #333; font-family: Arial, sans-serif; }
         .container { max-width: 400px; margin-top: 50px; text-align: center; }
         .card { padding: 20px; border-radius: 12px; background-color: white; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); position: relative; }
-        #qrcode-container { margin-top: 15px; padding: 20px; background-color: white; display: none; border-radius: 12px; }
+        #capture-area { margin-top: 15px; padding: 20px; background-color: white; display: none; border-radius: 12px; }
         #qrcode { padding: 15px; background-color: white; border-radius: 8px; display: inline-block; }
         .btn-primary, .btn-success { border-radius: 8px; padding: 10px; }
     </style>
@@ -25,7 +25,8 @@
             <input type="number" id="amount" class="form-control" placeholder="Enter Amount" min="1" required>
             <button class="btn btn-primary w-100 mt-3" onclick="generateQR()">Generate QR Code</button>
 
-            <div id="qrcode-container">
+            <!-- The area to be saved -->
+            <div id="capture-area">
                 <div id="qrcode"></div>
                 <button class="btn btn-success mt-3" onclick="saveQR()">Save QR to Gallery</button>
             </div>
@@ -33,8 +34,8 @@
     </div>
 
     <script>
-        let upiID = "your-upi-id@upi"; // Replace with your UPI ID
-        let merchantName = "Your Business Name"; // Replace with your business name
+        let upiID = "hostingmaster@ybl"; // Replace with your UPI ID
+        let merchantName = "MAINSMM"; // Replace with your business name
         let currency = "INR";
 
         function generateQR() {
@@ -56,13 +57,13 @@
             });
 
             // Show QR Code and save button
-            document.getElementById("qrcode-container").style.display = "block";
+            document.getElementById("capture-area").style.display = "block";
         }
 
         function saveQR() {
-            let qrContainer = document.getElementById("qrcode-container"); // Save the whole QR area
+            let captureArea = document.getElementById("capture-area"); // Capture the full area
 
-            html2canvas(qrContainer, { backgroundColor: "white", scale: 2 }).then(canvas => {
+            html2canvas(captureArea, { backgroundColor: "white", scale: 2 }).then(canvas => {
                 let link = document.createElement("a");
                 link.href = canvas.toDataURL("image/png");
                 link.download = "upi_qr_code.png";
